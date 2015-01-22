@@ -4,31 +4,31 @@
   <dependencies>
     <DependencySettings>
       <key>UnityVS</key>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
     </DependencySettings>
     <DependencySettings>
       <key>StrangeIoC</key>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
     </DependencySettings>
     <DependencySettings>
       <key>Ash.Net Core</key>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
     </DependencySettings>
     <DependencySettings>
       <key>Ash.Net Tools</key>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
     </DependencySettings>
     <DependencySettings>
       <key>Tweaker.Core</key>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
     </DependencySettings>
     <DependencySettings>
       <key>TweakerUnity</key>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
     </DependencySettings>
     <DependencySettings>
       <key>Framework.Core</key>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
     </DependencySettings>
     <DependencySettings>
       <key>Framework.Unity</key>
@@ -36,7 +36,7 @@
     </DependencySettings>
     <DependencySettings>
       <key>NLog</key>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
     </DependencySettings>
     <DependencySettings>
       <key>Framework.Unity.Editor</key>
