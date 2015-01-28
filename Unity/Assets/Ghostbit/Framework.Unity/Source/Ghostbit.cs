@@ -18,22 +18,6 @@ namespace Ghostbit.Framework.Unity
     [AttributeUsage(AttributeTargets.Class)]
     public class GhostbitGame : Attribute {}
 
-    [Serializable]
-    public class GameConfig
-    {
-        public string shortTitle;
-        public string longTitle;
-        //public string[] args;
-
-        public GameConfig Clone()
-        {
-            GameConfig clone = MemberwiseClone() as GameConfig;
-            //clone.args = new string[args.Length];
-            //args.CopyTo(clone.args, 0);
-            return clone;
-        }
-    }
-
     public class Ghostbit : ContextView
     {
         private Logger logger;

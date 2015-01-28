@@ -7,6 +7,7 @@ using strange.extensions.command.impl;
 using Ghostbit.Framework.Unity.Signals;
 using Ghostbit.Framework.Unity.Commands;
 using Ghostbit.Framework.Unity.Services;
+using Ghostbit.Framework.Unity.Models;
 
 namespace Ghostbit.Framework.Unity
 {
@@ -55,6 +56,8 @@ namespace Ghostbit.Framework.Unity
         private void MapModels()
         {
             injectionBinder.Bind<GameConfig>().ToSingleton();
+            injectionBinder.Bind<ResourceManifest>().ToSingleton();
+
         }
 
         private void MapServices()
