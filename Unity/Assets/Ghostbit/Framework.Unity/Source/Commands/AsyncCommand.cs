@@ -1,5 +1,4 @@
-﻿using Assets.Ghostbit.Core.Utils;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,6 @@ namespace Ghostbit.Framework.Unity.Commands
         protected override void DoExecute()
         {
             Retain();
-            logger.Info("Ghostbit = {0}", Ghostbit);
             Ghostbit.StartCoroutine(ExecuteAsync());
 
         }

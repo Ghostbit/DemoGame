@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectDependenciesSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <frameworkPath>C:/dev/Ghostbit/DemoGame/Framework</frameworkPath>
+  <dependencies>
+    <DependencySettings>
+      <key>UnityVS</key>
+      <enabled>false</enabled>
+    </DependencySettings>
+    <DependencySettings>
+      <key>StrangeIoC</key>
+      <enabled>false</enabled>
+    </DependencySettings>
+    <DependencySettings>
+      <key>Ash.Net Core</key>
+      <enabled>false</enabled>
+    </DependencySettings>
+    <DependencySettings>
+      <key>Ash.Net Tools</key>
+      <enabled>false</enabled>
+    </DependencySettings>
+    <DependencySettings>
+      <key>Tweaker.Core</key>
+      <enabled>false</enabled>
+    </DependencySettings>
+    <DependencySettings>
+      <key>TweakerUnity</key>
+      <enabled>false</enabled>
+    </DependencySettings>
+    <DependencySettings>
+      <key>Framework.Core</key>
+      <enabled>false</enabled>
+    </DependencySettings>
+    <DependencySettings>
+      <key>Framework.Unity</key>
+      <enabled>false</enabled>
+    </DependencySettings>
+    <DependencySettings>
+      <key>NLog</key>
+      <enabled>false</enabled>
+    </DependencySettings>
+    <DependencySettings>
+      <key>Framework.Unity.Editor</key>
+      <enabled>false</enabled>
+    </DependencySettings>
+  </dependencies>
+</ProjectDependenciesSettings>

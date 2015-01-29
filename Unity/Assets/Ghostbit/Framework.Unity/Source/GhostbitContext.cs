@@ -15,13 +15,13 @@ namespace Ghostbit.Framework.Unity
     {
         public GhostbitContext() : base()
         {
-
+            
         }
 
         public GhostbitContext(MonoBehaviour view, bool autoStartup) :
             base(view, autoStartup)
         {
-            Service.Set<MVCSContext>(this);
+            
         }
 
         protected override void addCoreComponents()
@@ -29,28 +29,22 @@ namespace Ghostbit.Framework.Unity
             base.addCoreComponents();
             injectionBinder.Unbind<ICommandBinder>();
             injectionBinder.Bind<ICommandBinder>().To<SignalCommandBinder>().ToSingleton();
+            Service.Set<MVCSContext>(this);
         }
 
         public override void Launch()
         {
             base.Launch();
 
-            Start start = (Start)injectionBinder.GetInstance<Start>();
+            Startup start = (Startup)injectionBinder.GetInstance<Startup>();
             start.Dispatch();
         }
 
         protected override void mapBindings()
         {
-            MapServices();
             MapModels();
+            MapServices();
             MapCommands();
-        }
-
-        private void MapCommands()
-        {
-            commandBinder.Bind<Start>().To<StartCmd>().Once();
-            commandBinder.Bind<CreateGameInstance>().To<CreateGameInstanceCmd>().Once();
-            commandBinder.Bind<LoadLevel>().To<LoadLevelCmd>();
         }
 
         private void MapModels()
@@ -63,7 +57,16 @@ namespace Ghostbit.Framework.Unity
         private void MapServices()
         {
             injectionBinder.Bind<Ghostbit>().ToValue(Service.Get<Ghostbit>());
-            injectionBinder.Bind<ResourceManager>().ToSingleton();
+            injectionBinder.Bind<ResourceSystem>().ToSingleton();
+        }
+
+        private void MapCommands()
+        {
+            commandBinder.Bind<Startup>().To<StartupCmd>().Once();
+            commandBinder.Bind<CreateGameInstance>().To<CreateGameInstanceCmd>().Once();
+            commandBinder.Bind<LoadResourceManifest>().To<LoadResourceManifestCmd>();
+            commandBinder.Bind<LoadLevel>().To<LoadLevelCmd>();
+            injectionBinder.Bind<LoadLevelComplete>().ToSingleton();
         }
     }
 }

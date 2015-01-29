@@ -1,4 +1,4 @@
-﻿using Assets.Ghostbit.Core.Utils;
+﻿using Ghostbit.Framework.Unity.Services;
 using Ghostbit.Framework.Unity.Signals;
 using strange.extensions.command.impl;
 using strange.extensions.context.api;
@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Ghostbit.Framework.Unity.Commands
 {
-    internal class StartCmd : LoggedCommand
+    internal class StartupCmd : LoggedCommand
     {
         [Inject]
         public CreateGameInstance CreateGameInstance { get; set; }
@@ -18,12 +18,15 @@ namespace Ghostbit.Framework.Unity.Commands
         [Inject]
         public LoadLevel LoadLevel { get; set; }
 
+        [Inject]
+        public LoadResourceManifest LoadResourceManifest { get; set; }
+
+
         protected override void DoExecute()
         {
-            CreateGameInstance.Dispatch();
-            
-            IGame game = injectionBinder.GetInstance<IGame>();
-            LoadLevel.Dispatch(game.MainLevel);
+            LoadResourceManifest.Dispatch();
+            CreateGameInstance.Dispatch();            
+            LoadLevel.Dispatch(injectionBinder.GetInstance<IGame>().MainLevel);
         }
     }
 }

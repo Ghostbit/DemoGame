@@ -9,5 +9,7 @@ namespace Ghostbit.Framework.Unity
         string ShortTitle { get; }
         string LongTitle { get; }
         string MainLevel { get; }
+
+        void Init();
     }
 }

@@ -1,5 +1,4 @@
-﻿using Assets.Ghostbit.Core.Utils;
-using Ghostbit.Framework.Unity.Models;
+﻿using Ghostbit.Framework.Unity.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +21,7 @@ namespace Ghostbit.Framework.Unity.Commands
             Config.longTitle = game.LongTitle;
             Config.shortTitle = game.ShortTitle;
 
+            game.Init();
             logger.Info("UnityGame initialized: {0} : {1}", Config.shortTitle, Config.longTitle);
         }
 

@@ -39,7 +39,7 @@ namespace Ghostbit.Framework.Unity.Editor.Casper
 
         private void BuildManifest()
         {
-            Debug.Log("Builing Manifest...");
+            Debug.Log("Building Manifest...");
 
             manifest = new ResourceManifest();
 
@@ -78,30 +78,37 @@ namespace Ghostbit.Framework.Unity.Editor.Casper
             DirectoryInfo[] directories = baseDirectory.GetDirectories("*", SearchOption.AllDirectories);
             foreach (DirectoryInfo di in directories)
             {
-                if (di.Name == "Resources")
+                if (di.Name != "Resources")
+                    continue;
+
+                Log("Found resouce directory: " + di.FullName);
+                FileInfo[] files = di.GetFiles("*", SearchOption.AllDirectories);
+                foreach (FileInfo fi in files)
                 {
-                    Log("Found resouce directory: " + di.FullName);
-                    FileInfo[] files = di.GetFiles("*", SearchOption.AllDirectories);
-                    foreach (FileInfo fi in files)
-                    {
-                        if (fi.Extension == ".meta")
-                            continue;
+                    if (fi.Extension == ".meta")
+                        continue;
 
-                        string relativePath = PathUtil.MakeRelativePath(baseDirectory.FullName, fi.FullName);
-                        UnityObject obj = AssetDatabase.LoadAssetAtPath(relativePath, typeof(UnityObject));
-                        string id = Path.ChangeExtension(relativePath.Replace(@"\", "/"), null);
-                        UriBuilder uri = new UriBuilder();
-                        uri.Scheme = ResourceManifest.URI_SCHEME_RESOURCES;
-                        uri.Host = null;
-                        uri.Path = relativePath;
-                        uri.Query = "type=" + obj.GetType().FullName;
+                    string pathToLoad = PathUtil.MakeRelativePath(baseDirectory.FullName, fi.FullName);
+                    UnityObject obj = AssetDatabase.LoadAssetAtPath(pathToLoad, typeof(UnityObject));
 
-                        var entry = new ResourceManifest.ResourceEntry();
-                        entry.id = id;
-                        entry.uri = uri.Uri.ToString();
-                        manifest.resources.Add(id, entry);
-                        Log("New Entry: " + entry.id + " => " + entry.uri);
-                    }
+                    string path = PathUtil.MakeRelativePath(di.FullName + @"\", fi.FullName);
+                    path = Path.ChangeExtension(path.Replace(@"\", "/"), null);
+
+                    //UriBuilder uri = new UriBuilder();
+                    //uri.Scheme = ResourceManifest.URI_SCHEME_RESOURCES;
+                    //uri.Path = path;
+                    //uri.Query = "type=" + obj.GetType().FullName;
+                    // ???
+                    // Uri builder always includes a host even though one is not needed.
+
+                    Uri uri = new Uri(string.Format("{0}:/{1}?type={2}", ResourceManifest.URI_SCHEME_RESOURCES, path, obj.GetType().FullName));
+
+                    var entry = new ResourceManifest.ResourceEntry();
+                    entry.path = path;
+                    entry.uri = uri.ToString();
+                    manifest.resources.Add(path, entry);
+                    Log("New Entry: " + entry.path + " => " + entry.uri);
+
                 }
             }
         }
@@ -113,12 +120,11 @@ namespace Ghostbit.Framework.Unity.Editor.Casper
 
         private void SaveManifest()
         {
-            const string manifestPath = @"Assets\Game\Resources\manifest.json.txt";
-            TextWriter writer = new StreamWriter(manifestPath);
+            TextWriter writer = new StreamWriter(ResourceManifest.MANIFEST_PATH_ABSOLUTE + ".txt");
             JsonSerializer ser = new JsonSerializer();
             ser.Serialize(writer, manifest);
             writer.Close();
-            Debug.Log("ResourceManifest: Manifest saved to " + manifestPath);
+            Debug.Log("ResourceManifest: Manifest saved to " + ResourceManifest.MANIFEST_PATH_ABSOLUTE + ".txt");
         }
 
         private void Log(string msg)

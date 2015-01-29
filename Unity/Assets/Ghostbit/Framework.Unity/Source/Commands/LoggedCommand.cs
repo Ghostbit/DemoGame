@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets.Ghostbit.Core.Utils
+namespace Ghostbit.Framework.Unity.Commands
 {
     public abstract class LoggedCommand : Command
     {
