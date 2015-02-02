@@ -10,10 +10,10 @@ namespace Ghostbit.Framework.Unity.Services
     {
         void Init();
 
-        ResourceLoadRequest LoadAsync<TAsset>(string path)
+        IResourceRequest LoadAsync<TAsset>(string path)
             where TAsset : UnityEngine.Object;
 
-        ResourceLoadRequest LoadAsyncUri<TAsset>(string uri)
+        IResourceRequest LoadAsyncUri<TAsset>(Uri uri)
             where TAsset : UnityEngine.Object;
     }
 }

@@ -9,7 +9,7 @@ namespace Ghostbit.Framework.Unity.Commands
     public abstract class AsyncCommand : LoggedCommand
     {
         [Inject]
-        public Ghostbit Ghostbit { get; set; }
+        public GhostbitRoot Ghostbit { get; set; }
 
         protected override void DoExecute()
         {

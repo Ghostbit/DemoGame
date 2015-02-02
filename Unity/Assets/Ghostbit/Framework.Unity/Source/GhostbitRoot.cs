@@ -11,6 +11,7 @@ using NLog.Config;
 using NLog;
 using System.Collections;
 using strange.extensions.context.impl;
+using Ghostbit.Framework.Unity.System;
 
 namespace Ghostbit.Framework.Unity
 {
@@ -18,13 +19,25 @@ namespace Ghostbit.Framework.Unity
     [AttributeUsage(AttributeTargets.Class)]
     public class GhostbitGame : Attribute {}
 
-    public class Ghostbit : ContextView
+    public class GhostbitRoot : ContextView
     {
         private Logger logger;
 
+        public static Coroutine StartRadicalCoroutine(IEnumerator coroutine)
+        {
+            return Service.Get<GhostbitRoot>().StartCoroutine(RadicalRoutine.Run(coroutine));
+        }
+
+        public static RadicalRoutine CreateRadicalCoroutine(IEnumerator coroutine)
+        {
+            var radicalRoutine = RadicalRoutine.Create(coroutine);
+            Service.Get<GhostbitRoot>().StartCoroutine(radicalRoutine.enumerator);
+            return radicalRoutine;
+        }
+
         private void Awake()
         {
-            Service.Set<Ghostbit>(this);
+            Service.Set<GhostbitRoot>(this);
             DontDestroyOnLoad(this);
 
             InitLogging();

@@ -44,23 +44,22 @@ namespace Ghostbit.Framework.Unity
         {
             MapModels();
             MapServices();
-            MapCommands();
+            MapSignals();
         }
 
         private void MapModels()
         {
             injectionBinder.Bind<GameConfig>().ToSingleton();
             injectionBinder.Bind<ResourceManifest>().ToSingleton();
-
         }
 
         private void MapServices()
         {
-            injectionBinder.Bind<Ghostbit>().ToValue(Service.Get<Ghostbit>());
+            injectionBinder.Bind<GhostbitRoot>().ToValue(Service.Get<GhostbitRoot>());
             injectionBinder.Bind<ResourceSystem>().ToSingleton();
         }
 
-        private void MapCommands()
+        private void MapSignals()
         {
             commandBinder.Bind<Startup>().To<StartupCmd>().Once();
             commandBinder.Bind<CreateGameInstance>().To<CreateGameInstanceCmd>().Once();

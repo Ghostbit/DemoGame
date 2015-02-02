@@ -5,6 +5,7 @@ using Ghostbit.Framework.Core.Utils;
 using NLog;
 using Ghostbit.Framework.Unity.Services;
 using Ghostbit.Framework.Unity.Signals;
+using Ghostbit.Framework.Unity.System;
 
 namespace Ghostbit.DemoGame
 {
@@ -39,15 +40,22 @@ namespace Ghostbit.DemoGame
             logger.Trace("OnLevelLoaded: {0}", levelName);
             if (levelName == MainLevel)
             {
-                //Service.Get<Ghostbit.Framework.Unity.Ghostbit>().StartCoroutine(LoadTestAsset());
+                GhostbitRoot.StartRadicalCoroutine(LoadTestAsset());
             }
         }
 
-        //private IEnumerator LoadTestAsset()
-        //{
-        //    ResourceSystem res = Service.Get<ResourceSystem>();
-        //    var request = res.LoadAsync<TextAsset>("Test/TestResource");
-        //    yield return request;
-        //}
+        private IEnumerator LoadTestAsset()
+        {
+            ResourceSystem res = Service.Get<ResourceSystem>();
+            var request = res.LoadAsync<TextAsset>("Test/test");
+            yield return request;
+            Debug.Log("loaded txt = " + ((TextAsset)request.asset).text);
+
+            var request2 = res.LoadAsync<TextAsset>("Test/test");
+            if(request2.finished)
+            {
+                Debug.Log("Loaded from cache?");
+            }
+        }
     }
 }

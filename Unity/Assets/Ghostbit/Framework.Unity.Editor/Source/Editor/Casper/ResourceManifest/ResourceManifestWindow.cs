@@ -100,8 +100,8 @@ namespace Ghostbit.Framework.Unity.Editor.Casper
                     //uri.Query = "type=" + obj.GetType().FullName;
                     // ???
                     // Uri builder always includes a host even though one is not needed.
-
-                    Uri uri = new Uri(string.Format("{0}:/{1}?type={2}", ResourceManifest.URI_SCHEME_RESOURCES, path, obj.GetType().FullName));
+                    // Just build the uri by hand for now.
+                    Uri uri = new Uri(string.Format("{0}:{1}?type={2}", ResourceManifest.URI_SCHEME_RESOURCES, path, obj.GetType().FullName));
 
                     var entry = new ResourceManifest.ResourceEntry();
                     entry.path = path;

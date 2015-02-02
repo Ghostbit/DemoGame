@@ -3,9 +3,11 @@ using Ghostbit.Framework.Unity.Models;
 using Newtonsoft.Json;
 using NLog;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Text;
 using UnityEngine;
 
@@ -18,6 +20,8 @@ namespace Ghostbit.Framework.Unity.Services
         [Inject]
         public ResourceManifest Manifest { get; set; }
 
+        private ResourceCache cache;
+
         public ResourceSystem()
         {
             Service.Set<ResourceSystem>(this);
@@ -25,58 +29,56 @@ namespace Ghostbit.Framework.Unity.Services
 
         public void Init()
         {
-            
+            logger.Info("Init");
+            cache = new ResourceCache();
         }
 
-        public ResourceLoadRequest LoadAsync<TAsset>(string path)
+        public IResourceRequest LoadAsync<TAsset>(string path)
             where TAsset : UnityEngine.Object
         {
             ResourceManifest.ResourceEntry entry = null;
-            if(!Manifest.resources.TryGetValue(path, out entry))
+            if (!Manifest.resources.TryGetValue(path, out entry))
+            {
                 throw new Exception("path was not found in manifest entries: " + path);
+            }
 
-            return LoadAsyncUri<TAsset>(entry.uri);
+            if(!Uri.IsWellFormedUriString(entry.uri, UriKind.RelativeOrAbsolute))
+            {
+                throw new ResourceException("Uri is not well formed: " + entry.uri);
+            }
+
+            return LoadAsyncUri<TAsset>(new Uri(entry.uri));
         }
 
-        public ResourceLoadRequest LoadAsyncUri<TAsset>(string uri)
+        public IResourceRequest LoadAsyncUri<TAsset>(Uri uri)
             where TAsset : UnityEngine.Object
         {
-            if (!Uri.IsWellFormedUriString(uri, UriKind.RelativeOrAbsolute))
+            string path = uri.AbsolutePath;
+            if (cache.IsCached(path))
             {
-                throw new Exception("Invalid uri: " + uri);
+                return new CachedResourceRequest(path, cache.GetResource<TAsset>(path));
             }
-
-            // TODO: utility for parsing query params
-            Uri _uri = new Uri(uri);
-
-            NameValueCollection nvp = QueryParams.ParseQueryString(_uri.Query);
-            if (nvp["type"] != null && nvp["type"] != typeof(TAsset).FullName)
+            else
             {
-                throw new Exception("The requested asset type '" + typeof(TAsset).FullName +
-                    "' does not match the type '" + nvp["type"] + "' specified by the uri.");
+                cache.Reserve(path);
+                IResourceRequest request = ResourceLoader<TAsset>.LoadAsyncUri(uri);
+                GhostbitRoot.StartRadicalCoroutine(WaitForLoadToFinish(request));
+                return request;
             }
+        }
 
-            ResourceLoadRequest request = null;
-            switch (_uri.Scheme)
-            {
-                case ResourceManifest.URI_SCHEME_RESOURCES:
-                    string path = _uri.LocalPath;
-                    if (path.StartsWith("/"))
-                        path = path.Substring(1);
-                    logger.Trace("Resources.LoadAsyn<{0}>({1})", typeof(TAsset).Name, path);
-                    request = new ResourceRequest(Resources.LoadAsync<TAsset>(path));
-                    break;
-                case ResourceManifest.URI_SCHEME_BUNDLE:
-                    // TODO
-                    break;
-                case ResourceManifest.URI_SCHEME_DEV_BUNDLE:
-                    // TODO
-                    break;
-                default:
-                    throw new Exception("Invalid resource scheme: " + _uri.Scheme);
-            }
+        public IEnumerator WaitForLoadToFinish(IResourceRequest request)
+        {
+            yield return request;
+            cache.Add(request.path, request.asset);
+        }
+    }
 
-            return request;
+    public class ResourceException : Exception, ISerializable
+    {
+        public ResourceException(string message)
+            : base(message)
+        {
         }
     }
 }

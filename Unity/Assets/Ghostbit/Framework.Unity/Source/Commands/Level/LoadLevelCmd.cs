@@ -1,4 +1,5 @@
-﻿using strange.extensions.context.api;
+﻿using Ghostbit.Framework.Unity.Signals;
+using strange.extensions.context.api;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +14,9 @@ namespace Ghostbit.Framework.Unity.Commands
         [Inject]
         public string LevelName { get; set; }
 
+        [Inject]
+        public LoadLevelComplete LoadLevelCompolete { get; set; }
+
         protected override IEnumerator DoExecuteAsync()
         {
             // TODO: show loading screen
@@ -20,6 +24,7 @@ namespace Ghostbit.Framework.Unity.Commands
             AsyncOperation async = Application.LoadLevelAsync(LevelName);
             yield return async;
             logger.Info("Level loaded: {0}", LevelName);
+            LoadLevelCompolete.Dispatch(LevelName);
             // TODO: hide loading screen
         }
     }
