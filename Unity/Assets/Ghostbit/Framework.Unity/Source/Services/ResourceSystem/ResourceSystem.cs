@@ -1,15 +1,9 @@
 ﻿using Ghostbit.Framework.Core.Utils;
 using Ghostbit.Framework.Unity.Models;
-using Newtonsoft.Json;
 using NLog;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
 using System.Runtime.Serialization;
-using System.Text;
-using UnityEngine;
 
 namespace Ghostbit.Framework.Unity.Services
 {
